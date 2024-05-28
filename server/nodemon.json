@@ -1,0 +1,5 @@
+{
+	"watch": ["./src", "nodemon.json"],
+	"ext": "ts",
+	"exec": "webpack && node dist/bundle.js"
+}
