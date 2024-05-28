@@ -1,5 +1,6 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
+import TSConfigPathsPlugin from 'tsconfig-paths-webpack-plugin';
 
 module.exports = {
   entry: './src/app.ts',
@@ -15,7 +16,8 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
+    plugins: [new TSConfigPathsPlugin({ configFile: "./tsconfig.json" })],
   },
   output: {
     filename: 'bundle.js',
