@@ -18,6 +18,10 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
     plugins: [new TSConfigPathsPlugin({ configFile: "./tsconfig.json" })],
+    aliases: {
+      "@routes": path.resolve(__dirname, 'src/routes/'),
+      "@services": path.resolve(__dirname, 'src/services/'),
+    }
   },
   output: {
     filename: 'bundle.js',
