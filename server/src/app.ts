@@ -1,17 +1,18 @@
-import dotenv from 'dotenv';
-import express from 'express';
 import cors from 'cors';
+import 'dotenv/config';
+import express from 'express';
+import { authRouter } from '@routes/auth.route';
 import connectDB from './config/db';
-
-dotenv.config({ path: '.env.local' });
 
 const port = process.env.PORT ?? 3000;
 const app = express();
 
 connectDB();
-app.use(cors())
+app.use(cors());
+app.use(express.json());
+app.use(authRouter);
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
   res.send('Hello World!');
 });
 

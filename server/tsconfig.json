@@ -1,20 +1,23 @@
 {
 	"compilerOptions": {
 		"target": "ES6",
-		"module": "commonjs",
+		"module": "NodeNext",
 		"outDir": "./dist",
 		"rootDir": "./src",
 		"strict": true,
 		"esModuleInterop": true,
 		"skipLibCheck": true,
+		"moduleResolution": "NodeNext",
 		"forceConsistentCasingInFileNames": true,
-    "baseUrl": "./src",
-    "paths": {
-      "@routes/*": ["routes/*"],
-      "@services/*": ["services/*"],
-      "@models/*": ["models/*"]
-    }
+		"baseUrl": "src/",
+		"paths": {
+			"@routes/*": ["routes/*"],
+			"@services/*": ["services/*"],
+			"@models/*": ["models/*"],
+			"@types/*": ["types/*"],
+			"@controllers/*": ["controllers/*"]
+		}
 	},
-  "exclude": ["node_modules"],
-	"include": ["src/**/*"]
+	"include": ["./src/**/*"],
+	"exclude": ["node_modules"]
 }
