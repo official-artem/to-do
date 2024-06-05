@@ -14,7 +14,7 @@
 			"@routes/*": ["routes/*"],
 			"@services/*": ["services/*"],
 			"@models/*": ["models/*"],
-			"@types/*": ["types/*"],
+			"@appTypes/*": ["appTypes/*"],
 			"@controllers/*": ["controllers/*"]
 		}
 	},

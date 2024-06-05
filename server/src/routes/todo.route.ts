@@ -1,22 +1,20 @@
+import TodoController from '@controllers/todo.controller';
 import express from 'express';
+import { AuthController } from '@controllers/auth.controller';
 
-const router = express.Router();
+const todoRouter = express.Router();
 
-router.get('/', (req, res) => {
-  return '';
-});
+todoRouter.use(AuthController.verification)
 
-router.get('/:id', (req, res) => {
-  return '';
-});
+todoRouter.get('/', TodoController.getAll);
 
-router.post('/', (req, res) => {
-  return '';
-});
+todoRouter.get('/:id', TodoController.getOne);
 
-router.delete('/:id', (req, res) => {
-  return '';
-});
+todoRouter.post('/', TodoController.createOne);
 
-export default router;
+todoRouter.patch('/:id', TodoController.updateOne)
+
+todoRouter.delete('/:id', TodoController.removeOne);
+
+export default todoRouter;
 

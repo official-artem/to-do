@@ -1,21 +1,101 @@
-import { Request, Response } from 'express';
 import User from '@models/user.model';
+import { RouteCallBack } from '@appTypes/route.type';
+import { jwtService } from '@services/jwt.service';
+import { comparePassword,  } from 'utils/hashPassword';
+import { UserService } from '@services/user.service';
+import bcrypt from 'bcrypt';
 
-type ControllerFunc = (req: Request, res: Response) => any;
-
-const registration: ControllerFunc = async (req, res) => {
+const registration: RouteCallBack = async (req, res) => {
   const { name, email, password } = req.body;
 
+  if (!name || !email || !password) {
+    res.sendStatus(400)
+  }
   const createdUser = await new User({
     name,
     email,
-    password
+    password: await bcrypt.hash(password, 10),
   })
   .save();
 
-  res.send(createdUser);
+  try {
+    const JWTCode = jwtService.sign({
+      id: createdUser.id,
+      email: createdUser.email
+    });
+
+    res.cookie('todo', JWTCode, {
+      secure: false,
+      domain: 'localhost',
+      sameSite: 'lax',
+      httpOnly: true
+    });
+    res.sendStatus(201);
+  } catch (err: any) {
+    res.sendStatus(500);
+
+    throw new Error(err);
+  }
 };
 
+const verification: RouteCallBack = (req, res, next) => {
+  const jwtCode = req.cookies.todo;
+
+  const user = jwtService.verify(jwtCode);
+
+  if (!user) {
+    res.clearCookie('todo', { path: '/' });
+    res.sendStatus(401);
+    return;
+  }
+
+  res.locals.userId = user.id;
+
+  next()
+}
+
+const login: RouteCallBack = async (req, res) => {
+  const { email, password } = req.body;
+
+  const user = await UserService.getOne(email);
+
+  if (!user) {
+    res.sendStatus(404);
+
+    return;
+  }
+
+  const isPasswordCompare = await comparePassword({
+    hash: user?.password,
+    pass: password
+    })
+
+    if (!isPasswordCompare) {
+    res.sendStatus(401);
+    }
+  
+  try {
+    const JWTCode = jwtService.sign({
+      id: user.id,
+      email: user.email
+    });
+
+    res.cookie('todo', JWTCode, {
+      secure: false,
+      domain: 'localhost',
+      sameSite: 'lax',
+      httpOnly: true
+    });
+    res.sendStatus(201);
+  } catch (err: any) {
+    res.sendStatus(500);
+
+    throw new Error(err);
+  }
+}
+
 export const AuthController = {
-  registration
+  registration,
+  verification,
+  login
 };

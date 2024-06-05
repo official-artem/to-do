@@ -1,35 +1,45 @@
-import Task from '@models/task.model';
-import TaskStatus from 'types/taskStatus.type';
+import { TodoBody } from '@appTypes/todo.type';
+import Todo from '@models/todo.model';
+import { TodoStatus} from 'appTypes/todo.type';
 
-export const getOne = (id: string) => {
-  return Task.findById(id);
+const getOne = (id: string) => {
+  return Todo.findById(id);
 }
 
-export const getAll = async (userId: string) => {
-  return await Task.find({ userId });
+const getAll = async (userId: string) => {
+  return await Todo.find({ userId });
 }
 
-export const createOne = (
-  content: string,
-  status: TaskStatus,
-  priority: number,
-  ) => {
-  const createdTask = new Task({
+const createOne = ({
+  content,
+  status,
+  priority,
+  userId
+}: TodoBody) => {
+  const createdTask = new Todo({
     content,
     status,
     priority,
+    userId,
   });
 
   return createdTask.save();
 }
 
-export const updateOne = (
-  taskId: string,
-  content?: string,
-  status?: TaskStatus,
-  priority?: number,
-  ) => {
-  const updatedTask = Task.findByIdAndUpdate(taskId, {
+interface UpdateOneProps {
+  id: string,
+  content: string,
+  priority: number,
+  status: string
+}
+
+const updateOne = ({
+  id,
+  content,
+  priority,
+  status
+}: UpdateOneProps) => {
+  const updatedTask = Todo.findByIdAndUpdate(id, {
     content,
     status,
     priority
@@ -39,6 +49,23 @@ export const updateOne = (
   return updatedTask;
 }
 
-export const deleteOne = (taskId: string) => {
-  Task.findByIdAndDelete(taskId);
+const removeOne = async (todoId: string) => {
+  await Todo.findByIdAndDelete(todoId);
 }
+
+const removeMany = (userId: string) => {
+  Todo.deleteMany({
+    userId,
+  })
+}
+
+const TodoService = {
+  getOne,
+  getAll,
+  createOne,
+  updateOne,
+  removeOne,
+  removeMany
+};
+
+export default TodoService;

@@ -11,23 +11,23 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.ts?/,
+        test: /\.ts?$/,
         use: 'ts-loader',
         exclude: /node_modules/,
       }
     ]
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js'],
+    extensions: ['.ts', '.js'],
     cache: true,
     plugins: [new TSConfigPathsPlugin({ configFile: "tsconfig.json" })],
     alias: {
-      "@routes": path.resolve(__dirname, 'src/routes'),
+      "@routes": path.resolve(__dirname, 'src/routes/'),
       "@services": path.resolve(__dirname, 'src/services/'),
       "@models": path.resolve(__dirname, 'src/models/'),
       "@schemaTypes": path.resolve(__dirname, './src/appTypes/'),
       "@controllers": path.resolve(__dirname, 'src/controllers/'),
-      "@types": path.resolve(__dirname, 'src/types/'),
+      "@appTypes": path.resolve(__dirname, 'src/appTypes/'),
     }
   },
   output: {
