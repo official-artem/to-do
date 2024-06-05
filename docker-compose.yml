@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  client:
+    container_name: client
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./client:/app
+      - /app/node_modules
+    environment:
+      NEXT_PUBLIC_SERVER_URI: http://localhost:5001
+
+  server:
+    container_name: server
+    restart: always
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    environment:
+      MONGO_DB_URI: ${DATABASE_URI}
+      JWT_KEY: ${JWT_KEY}
+      BCRYPT_KEY: ${BCRYPT_KEY}
+    depends_on:
+      - mongodb2
+
+  mongodb2:
+    image: mongo:latest
+    container_name: mongodb2
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DATABASE_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DATABASE_PASS}
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:

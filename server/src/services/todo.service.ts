@@ -1,6 +1,5 @@
 import { TodoBody } from '@appTypes/todo.type';
 import Todo from '@models/todo.model';
-import { TodoStatus} from 'appTypes/todo.type';
 
 const getOne = (id: string) => {
   return Todo.findById(id);

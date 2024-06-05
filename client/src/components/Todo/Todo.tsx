@@ -24,14 +24,18 @@ export default memo(
     const [isSelectedContent, setIsSelectedContent] = useState(false);
 
     const handleUpdate = async () => {
-      console.log(_priority);
-      await new TodoClient(
-        _content,
-        _priority,
-        _status,
-        _id,
-      ).updateOne();
-      setTodos(await new TodoService().getAll());
+      try {
+        await new TodoClient(
+          _content,
+          _priority,
+          _status,
+          _id,
+        ).updateOne();
+        setTodos(await new TodoService().getAll());
+        setIsSelectedContent(false)
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {

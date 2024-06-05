@@ -44,8 +44,9 @@ const verification: RouteCallBack = (req, res, next) => {
   const user = jwtService.verify(jwtCode);
 
   if (!user) {
-    res.clearCookie('todo', { path: '/' });
-    res.sendStatus(401);
+    res
+      .clearCookie('todo', { path: '/'}).sendStatus(401)
+      .sendStatus(401);
     return;
   }
 
@@ -57,7 +58,10 @@ const verification: RouteCallBack = (req, res, next) => {
 const login: RouteCallBack = async (req, res) => {
   const { email, password } = req.body;
 
+  try {
   const user = await UserService.getOne(email);
+
+  console.log('user:', user)
 
   if (!user) {
     res.sendStatus(404);
@@ -70,11 +74,13 @@ const login: RouteCallBack = async (req, res) => {
     pass: password
     })
 
+
+
     if (!isPasswordCompare) {
     res.sendStatus(401);
     }
+
   
-  try {
     const JWTCode = jwtService.sign({
       id: user.id,
       email: user.email
